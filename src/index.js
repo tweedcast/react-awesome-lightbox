@@ -67,6 +67,7 @@ export default class Lightbox extends React.Component {
         const y    = (_xy.y - _ccy) * -1 * _z;
         this.setState({x, y, zoom: _z});
     }
+
     navigateImage = (direction, e) =>{
         this.stopSideEffect(e);
         let current = 0;
@@ -108,7 +109,7 @@ export default class Lightbox extends React.Component {
         this.setState({zoom: this.state.zoom + zoomStep});
       } else if(e.deltaY < 0){
         this.setState({zoom: this.state.zoom - zoomStep});
-      }      
+      }
     }
     applyZoom = (type) => {
         let {zoomStep = DEFAULT_ZOOM_STEP} = this.props;
@@ -181,12 +182,12 @@ export default class Lightbox extends React.Component {
         }
     }
     componentDidMount(){
-        document.body.classList.add("lb-open-lightbox");
+        //document.body.classList.add("lb-open-lightbox");
         let {keyboardInteraction = true} = this.props;
         if(keyboardInteraction) document.addEventListener("keyup", this.keyboardNavigation);
     }
     componentWillUnmount(){
-        document.body.classList.remove("lb-open-lightbox");
+        //document.body.classList.remove("lb-open-lightbox");
         let {keyboardInteraction = true} = this.props;
         if(keyboardInteraction) document.removeEventListener("keyup", this.keyboardNavigation);
     }
@@ -244,27 +245,30 @@ export default class Lightbox extends React.Component {
                 className={`lb-canvas${loading?" lb-loading":""}`}
                 ref={this._cont}
                 onClick={e=>this.canvasClick(e)}>
+                <div
+                  draggable = "false"
+                  style={{
+                      transform  : this.createTransform(x,y,zoom,rotate),
+                      cursor     : zoom>1?"grab":"unset",
+                      transition : moving?"none":"all 0.1s"
+                  }}
+                  onMouseDown={e=>this.startMove(e)}
+                  onTouchStart={e=>this.startMove(e)}
+                  onMouseMove={e=>this.duringMove(e)}
+                  onTouchMove={e=>this.duringMove(e)}
+                  onMouseUp={e=>this.endMove(e)}
+                  onMouseLeave={e=>this.endMove(e)}
+                  onTouchEnd={e=>this.endMove(e)}
+                  onClick={e=>this.stopSideEffect(e)}
+                  onDoubleClick={e=>this.shockZoom(e)}
+                  onWheel={e=>this.wheelZoom(e)}>
                     <img
-                    draggable = "false"
-                    style={{
-                        transform  : this.createTransform(x,y,zoom,rotate),
-                        cursor     : zoom>1?"grab":"unset",
-                        transition : moving?"none":"all 0.1s"
-                    }}
-                    onMouseDown={e=>this.startMove(e)}
-                    onTouchStart={e=>this.startMove(e)}
-                    onMouseMove={e=>this.duringMove(e)}
-                    onTouchMove={e=>this.duringMove(e)}
-                    onMouseUp={e=>this.endMove(e)}
-                    onMouseLeave={e=>this.endMove(e)}
-                    onTouchEnd={e=>this.endMove(e)}
-                    onClick={e=>this.stopSideEffect(e)}
-                    onDoubleClick={e=>this.shockZoom(e)}
-                    onWheel={e=>this.wheelZoom(e)}
                     onLoad={e=>this.setState({loading: false})}
                     className={`lb-img${loading?" lb-loading":""}`}
                     title={title}
                     src={image} alt={title}/>
+                </div>
+
                         <div className="mobile-controls lb-show-mobile">
                         {multi?<div title="Previous" className="lb-button lb-icon-arrow prev" onClick={e=>this.navigateImage("prev", e)}></div>:null}
                         {_reset?<div title="Reset" className="lb-button lb-icon-reset reload" onClick={this.reset}></div>:null}
