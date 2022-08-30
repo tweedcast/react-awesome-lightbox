@@ -105,6 +105,7 @@ export default class Lightbox extends React.Component {
     }
     endMove   = (e) => this.setState({moving: false});
     wheelZoom = (e) => {
+      let {zoomStep = DEFAULT_ZOOM_STEP} = this.props;
       if(e.deltaY > 0){
         this.setState({zoom: this.state.zoom + zoomStep});
       } else if(e.deltaY < 0){

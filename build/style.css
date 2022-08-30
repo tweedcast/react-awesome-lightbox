@@ -94,6 +94,11 @@
     cursor: grab;
     background-size: 50px;
     transform-origin: center center;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 .lb-canvas .lb-img.lb-loading{
     opacity: 0;
@@ -129,7 +134,7 @@
     transform: rotateY(180deg);
 }
 .lb-show-mobile{
-    display: none;   
+    display: none;
 }
 .lb-disabled{
     pointer-events: none;
