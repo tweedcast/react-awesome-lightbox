@@ -51,8 +51,8 @@ export default class Lightbox extends React.Component {
     resetZoom = () => this.setState({x:0, y:0, zoom:1});
     shockZoom = e =>{
         let {
-            zoomStep        = DEFAULT_ZOOM_STEP, 
-            allowZoom       = true, 
+            zoomStep        = DEFAULT_ZOOM_STEP,
+            allowZoom       = true,
             doubleClickZoom = DEFAULT_LARGE_ZOOM
         } = this.props;
         if(!allowZoom || !doubleClickZoom) return false;
@@ -103,6 +103,13 @@ export default class Lightbox extends React.Component {
         });
     }
     endMove   = (e) => this.setState({moving: false});
+    wheelZoom = (e) => {
+      if(e.deltaY > 0){
+        this.setState({zoom: this.state.zoom + zoomStep});
+      } else if(e.deltaY < 0){
+        this.setState({zoom: this.state.zoom - zoomStep});
+      }      
+    }
     applyZoom = (type) => {
         let {zoomStep = DEFAULT_ZOOM_STEP} = this.props;
         switch(type){
@@ -144,7 +151,7 @@ export default class Lightbox extends React.Component {
         if(clickOutsideToExit && this.state.zoom <=1) return this.exit(e);
     }
     keyboardNavigation = e => {
-        let {allowZoom = true, allowReset = true} = this.props; 
+        let {allowZoom = true, allowReset = true} = this.props;
         let {multi, x, y, zoom} = this.state;
         switch(e.key){
             case "ArrowLeft":
@@ -209,11 +216,11 @@ export default class Lightbox extends React.Component {
                             order     : buttonAlign === "flex-start"?"2":"unset"
                         }}>
                             <span title={title} style= {{textAlign : buttonAlign === "flex-start"?"right":"left"}}>{title}</span>
-                        </div>  
+                        </div>
                     </Cond>
                     <Cond condition={buttonAlign === "center" || _reset}>
-                        <div title="Reset" 
-                        style={{order : buttonAlign === "flex-start"?"1":"unset"}} 
+                        <div title="Reset"
+                        style={{order : buttonAlign === "flex-start"?"1":"unset"}}
                         className={`lb-button lb-icon-reset lb-hide-mobile reload ${_reset?"":"lb-disabled"}`}
                         onClick={this.reset}></div>
                     </Cond>
@@ -223,7 +230,7 @@ export default class Lightbox extends React.Component {
                     </Cond>
                     <Cond condition = {allowZoom}>
                         <div title="Zoom In" className="lb-button lb-icon-zoomin zoomin" onClick={()=>this.applyZoom("in")}></div>
-                        <div title="Zoom Out" 
+                        <div title="Zoom Out"
                         className={`lb-button lb-icon-zoomout zoomout ${zoom<=1?"lb-disabled":""}`}
                         onClick={()=>this.applyZoom("out")}></div>
                     </Cond>
@@ -233,7 +240,7 @@ export default class Lightbox extends React.Component {
                     </Cond>
                     <div title="Close" className="lb-button lb-icon-close close" style={{order: buttonAlign === "flex-start"?"-1":"unset"}} onClick={e=>this.exit(e)}></div>
                 </div>
-                <div 
+                <div
                 className={`lb-canvas${loading?" lb-loading":""}`}
                 ref={this._cont}
                 onClick={e=>this.canvasClick(e)}>
@@ -253,6 +260,7 @@ export default class Lightbox extends React.Component {
                     onTouchEnd={e=>this.endMove(e)}
                     onClick={e=>this.stopSideEffect(e)}
                     onDoubleClick={e=>this.shockZoom(e)}
+                    onWheel={e=>this.wheelZoom(e)}
                     onLoad={e=>this.setState({loading: false})}
                     className={`lb-img${loading?" lb-loading":""}`}
                     title={title}
