@@ -242,7 +242,7 @@ export default class Lightbox extends React.Component {
                         <div title="Rotate left" className="lb-button lb-icon-rotate rotatel" onClick={()=>this.applyRotate("acw")}></div>
                         <div title="Rotate right" className="lb-button lb-icon-rotate rotater" onClick={()=>this.applyRotate("cw")}></div>
                     </Cond>
-                    <div title="Close" className="lb-button lb-icon-close close" style={{order: buttonAlign === "flex-start"?"-1":"unset"}} onClick={e=>this.exit(e)}></div>
+                    
                 </div>
                 <div
                 className={`lb-canvas${loading?" lb-loading":""}`}
